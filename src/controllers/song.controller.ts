@@ -57,3 +57,41 @@ export const deleteSong = async (req: Request, res: Response) => {
   }
 };
 
+export const getStats = async (req: Request, res: Response) => {
+  try {
+    const totalSongs = await Song.countDocuments();
+    const totalArtists = await Song.distinct('artist').countDocuments();
+    const totalAlbums = await Song.distinct('album').countDocuments();
+    const totalGenres = await Song.distinct('genre').countDocuments();
+
+    const songsInGenre = await Song.aggregate([
+      { $group: { _id: '$genre', count: { $sum: 1 } } },
+    ]);
+
+    const songsByArtist = await Song.aggregate([
+      { $group: { _id: '$artist', count: { $sum: 1 } } },
+    ]);
+
+    const albumsByArtist = await Song.aggregate([
+      { $group: { _id: '$artist', albums: { $addToSet: '$album' } } },
+      { $project: { _id: 1, count: { $size: '$albums' } } },
+    ]);
+
+    const songsInAlbum = await Song.aggregate([
+      { $group: { _id: '$album', count: { $sum: 1 } } },
+    ]);
+
+    res.status(200).send({
+      totalSongs,
+      totalArtists,
+      totalAlbums,
+      totalGenres,
+      songsInGenre,
+      songsByArtist,
+      albumsByArtist,
+      songsInAlbum,
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
