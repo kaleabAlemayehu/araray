@@ -33,3 +33,14 @@ export const getSongById = async (req: Request, res: Response) => {
   }
 };
 
+export const updateSong = async (req: Request, res: Response) => {
+  try {
+    const song = await Song.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!song) {
+      return res.status(404).send();
+    }
+    res.status(200).send(song);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
