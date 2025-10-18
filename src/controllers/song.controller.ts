@@ -21,3 +21,15 @@ export const getSongs = async (req: Request, res: Response) => {
   }
 };
 
+export const getSongById = async (req: Request, res: Response) => {
+  try {
+    const song = await Song.findById(req.params.id);
+    if (!song) {
+      return res.status(404).send();
+    }
+    res.status(200).send(song);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
