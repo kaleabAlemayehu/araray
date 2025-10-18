@@ -12,3 +12,12 @@ export const createSong = async (req: Request, res: Response) => {
   }
 };
 
+export const getSongs = async (req: Request, res: Response) => {
+  try {
+    const songs = await Song.find();
+    res.status(200).send(songs);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
