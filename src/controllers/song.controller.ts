@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Song, { ISong } from '../models/song.model';
+import s3 from '../config/s3';
 
 export const createSong = async (req: Request, res: Response) => {
   try {
@@ -93,5 +94,43 @@ export const getStats = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(500).send(error);
+  }
+};
+
+
+export const uploadSong = async (req: Request, res: Response) => {
+  try {
+    if (process.env.NODE_ENV === 'production') {
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME || '',
+        Key: req.file?.originalname || '',
+        Body: req.file?.buffer,
+      };
+
+      s3.upload(params, async (err: any, data: any) => {
+        if (err) {
+          res.status(400).send(err);
+        }
+
+export const uploadFile = async (req: Request, res: Response) => {
+  try {
+    if (process.env.NODE_ENV === 'production') {
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME || '',
+        Key: req.file?.originalname || '',
+        Body: req.file?.buffer,
+      };
+
+      s3.upload(params, (err: any, data: any) => {
+        if (err) {
+          res.status(400).send(err);
+        }
+        res.status(200).send({ audioUrl: data.Location });
+      });
+    } else {
+      res.status(200).send({ audioUrl: `/music/${req.file?.filename}` });
+    }
+  } catch (error) {
+    res.status(400).send(error);
   }
 };
