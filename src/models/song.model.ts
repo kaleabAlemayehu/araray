@@ -5,6 +5,7 @@ export interface ISong extends Document {
   artist: string;
   album: string;
   genre: string;
+  audioUrl: string;
 }
 
 const songSchema = new Schema<ISong>(
@@ -13,6 +14,7 @@ const songSchema = new Schema<ISong>(
     artist: { type: String, required: true },
     album: { type: String, required: true },
     genre: { type: String, required: true },
+    audioUrl: { type: String, required: true },
   },
   { timestamps: true }
 );
