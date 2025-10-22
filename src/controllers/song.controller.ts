@@ -106,7 +106,7 @@ export const uploadFile = async (req: Request, res: Response) => {
       const params: S3.PutObjectRequest = {
         Bucket: process.env.AWS_BUCKET_NAME || '',
         Key: req.file?.originalname || '',
-        Body: req.file?.buffer,
+        Body: req.file?.buffer as S3.Body,
       };
 
       s3.upload(params, (err: any, data: any) => {
