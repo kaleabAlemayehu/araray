@@ -17,7 +17,12 @@ export const createSong = async (req: Request, res: Response) => {
 
 export const getSongs = async (req: Request, res: Response) => {
   try {
-    const songs = await Song.find();
+    const { genre } = req.query;
+    let query = {};
+    if (genre) {
+      query = { genre: genre as string };
+    }
+    const songs = await Song.find(query);
     res.status(200).send(songs);
   } catch (error) {
     res.status(500).send(error);

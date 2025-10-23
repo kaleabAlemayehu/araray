@@ -81,6 +81,12 @@ router.post('/upload', upload.single('song'), uploadFile);
  *   get:
  *     summary: Returns the list of all the songs
  *     tags: [Songs]
+ *     parameters:
+ *       - in: query
+ *         name: genre
+ *         schema:
+ *           type: string
+ *         description: Filter songs by genre
  *     responses:
  *       200:
  *         description: The list of the songs
