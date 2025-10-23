@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Song, { ISong } from '../models/song.model';
 import s3 from '../config/s3';
 import { S3 } from 'aws-sdk';
+import path from 'path';
 
 export const createSong = async (req: Request, res: Response) => {
   try {
@@ -105,7 +106,7 @@ export const uploadFile = async (req: Request, res: Response) => {
     if (process.env.NODE_ENV === 'production') {
       const params: S3.PutObjectRequest = {
         Bucket: process.env.AWS_BUCKET_NAME || '',
-        Key: req.file?.originalname || '',
+        Key: `${req.file?.fieldname}-${Date.now()}${path.extname(req.file?.originalname || '.mp3')}` || '',
         Body: req.file?.buffer as S3.Body,
       };
 
