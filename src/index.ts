@@ -10,15 +10,22 @@ const app = express();
 
 app.use(cors());
 
+app.use(express.json());
+
 const port = process.env.PORT || 3000;
 
 connectDB();
 
-app.use(express.json());
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger';
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to the Song API!');
+  res.redirect('/api-docs');
 });
+
+
 
 app.use('/api/v1/songs', songRoutes);
 
