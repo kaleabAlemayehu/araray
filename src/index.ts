@@ -30,8 +30,8 @@ app.get('/', (req: Request, res: Response) => {
   res.redirect('/api-docs');
 });
 
-
 app.use('/api/v1/songs', songRoutes);
+app.use('/api/v1/playlists', playlistRoutes);
 
 app.use('/api/v1/music', express.static('music'));
 

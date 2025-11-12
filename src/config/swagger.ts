@@ -51,6 +51,37 @@ const swaggerDefinition = {
           audioUrl: 'http://example.com/song.mp3',
         },
       },
+      Playlist: {
+        type: 'object',
+        required: ['name'],
+        properties: {
+          id: {
+            type: 'string',
+            description: 'The auto-generated id of the playlist',
+          },
+          name: {
+            type: 'string',
+            description: 'The name of the playlist',
+          },
+          description: {
+            type: 'string',
+            description: 'The description of the playlist',
+          },
+          songs: {
+            type: 'array',
+            items: {
+              type: 'string',
+              description: 'Song ID',
+            },
+            description: 'Array of song IDs in the playlist',
+          },
+        },
+        example: {
+          name: 'My Workout Playlist',
+          description: 'Songs for my daily workout',
+          songs: ['60d0fe4f5e36760015e3f1e1', '60d0fe4f5e36760015e3f1e2'],
+        },
+      },
     },
   },
 };
