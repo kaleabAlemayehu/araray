@@ -1,10 +1,15 @@
 import express, { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
+import type { DotenvConfigOptions } from 'dotenv';
 import connectDB from './config/db';
 import songRoutes from './routes/song.routes';
+import playlistRoutes from './routes/playlist.routes';
 import cors from 'cors';
+import path from 'path';
 
-dotenv.config();
+const configPath = path.resolve(process.cwd(), '.env.dev');
+
+dotenv.config({ path: configPath } as DotenvConfigOptions);
 
 const app = express();
 
@@ -24,7 +29,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/', (req: Request, res: Response) => {
   res.redirect('/api-docs');
 });
-
 
 
 app.use('/api/v1/songs', songRoutes);
