@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import morgan from 'morgan';
 import * as dotenv from 'dotenv';
 import type { DotenvConfigOptions } from 'dotenv';
 import connectDB from './config/db';
@@ -14,6 +15,7 @@ dotenv.config({ path: configPath } as DotenvConfigOptions);
 const app = express();
 
 app.use(cors());
+app.use(morgan('dev'));
 
 app.use(express.json());
 
