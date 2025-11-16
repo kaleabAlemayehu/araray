@@ -5,10 +5,11 @@ import type { DotenvConfigOptions } from 'dotenv';
 import connectDB from './config/db';
 import songRoutes from './routes/song.routes';
 import playlistRoutes from './routes/playlist.routes';
+import statsRoutes from './routes/stats.routes';
 import cors from 'cors';
 import path from 'path';
 
-const configPath = path.resolve(process.cwd(), '.env.dev');
+const configPath = path.resolve(process.cwd(), '.env.local');
 
 dotenv.config({ path: configPath } as DotenvConfigOptions);
 
@@ -34,6 +35,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/api/v1/songs', songRoutes);
 app.use('/api/v1/playlists', playlistRoutes);
+app.use('/api/v1/stats', statsRoutes);
 
 app.use('/api/v1/music', express.static('music'));
 

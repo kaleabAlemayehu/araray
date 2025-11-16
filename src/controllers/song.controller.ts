@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Song, { ISong } from '../models/song.model';
+import Playlist from '../models/playlist.model';
 import s3 from '../config/s3';
 import { S3 } from 'aws-sdk';
 import path from 'path';
@@ -68,6 +69,7 @@ export const deleteSong = async (req: Request, res: Response) => {
 export const getStats = async (req: Request, res: Response) => {
   try {
     const totalSongs = await Song.countDocuments();
+    const totalPlaylists = await Playlist.countDocuments();
     const totalArtists = await Song.distinct('artist').countDocuments();
     const totalAlbums = await Song.distinct('album').countDocuments();
     const totalGenres = await Song.distinct('genre').countDocuments();
@@ -89,8 +91,18 @@ export const getStats = async (req: Request, res: Response) => {
       { $group: { _id: '$album', count: { $sum: 1 } } },
     ]);
 
+    const numberOfSongsInPlaylist = await Playlist.aggregate([
+      {
+        $project: {
+          name: 1,
+          numberOfSongs: { $size: "$songs" }
+        }
+      }
+    ]);
+
     res.status(200).send({
       totalSongs,
+      totalPlaylists,
       totalArtists,
       totalAlbums,
       totalGenres,
@@ -98,6 +110,7 @@ export const getStats = async (req: Request, res: Response) => {
       songsByArtist,
       albumsByArtist,
       songsInAlbum,
+      numberOfSongsInPlaylist
     });
   } catch (error) {
     res.status(500).send(error);
